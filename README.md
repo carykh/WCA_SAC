@@ -11,11 +11,11 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 
 ## Steps for creating images:
 * 1. Open a command prompt from this directory.
-* 2. Run this command, which will create a simplified .csv data file!
+* 2. Run this command, which will create a simplified .csv data file!  (Takes 5 seconds on my computer)
    ```
    python create_top100.py 333
    ```
-* 3. If you ever have a .csv data file, then run this command to produce the final image:
+* 3. If you ever have a .csv data file, then run this command to produce the final image:   (Takes 0.8 seconds on my computer)
    ```
    python create_graph.py 333
    ```
