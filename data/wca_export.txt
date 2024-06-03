@@ -1,0 +1,3 @@
+Download a WCA .tsv export from here: (https://www.worldcubeassociation.org/export/results)
+
+Then extract the .zip, and put the files in this folder!
