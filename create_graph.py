@@ -13,8 +13,8 @@ START_YEAR = 2003
 END_YEAR = 2024
 LIST_N = 100
 ADD_FLAGS = True
-PATH_TO_FLAGS = "P:/YT/_Reusables/flags/"
-PATH_TO_WCA_EXPORT = "data"
+PATH_TO_FLAGS = "flags"   # filepath to the folder the flag images are stored in
+PATH_TO_WCA_EXPORT = "data"   # filepath to the folder the WCA export files are stored in
 
 LEN = END_YEAR-START_YEAR+1
 W_W = 6000
