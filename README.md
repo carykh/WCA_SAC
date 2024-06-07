@@ -10,7 +10,7 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 * 3.  Extract the flags.zip folder. Make sure the flag images are in the /flags folder.
   4.  Run this command to install the required libraries (it's just numpy, unidecode, and Pillow, which you may already have):
      ```
-     pip install -r /path/to/requirements.txt
+     pip install -r requirements.txt
      ```
 
 ## Steps for creating images:
