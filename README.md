@@ -8,6 +8,10 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 * 1. Download this repo.
 * 2.  Download the most recent WCA .tsv export from here (https://www.worldcubeassociation.org/export/results), extract the .zip, and put the files in the /data folder.
 * 3.  Extract the flags.zip folder. Make sure the flag images are in the /flags folder.
+  4.  Run this command to install the required libraries (it's just numpy, unidecode, and Pillow, which you may already have):
+     ```
+     pip install -r /path/to/requirements.txt
+     ```
 
 ## Steps for creating images:
 * 1. Open a command prompt from this directory.
