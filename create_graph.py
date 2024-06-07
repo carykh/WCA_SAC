@@ -13,7 +13,7 @@ START_YEAR = 2003
 END_YEAR = 2024
 LIST_N = 100
 ADD_FLAGS = True
-PATH_TO_FLAGS = "flags"
+PATH_TO_FLAGS = "P:/YT/_Reusables/flags/"
 PATH_TO_WCA_EXPORT = "data"
 
 LEN = END_YEAR-START_YEAR+1
@@ -189,6 +189,13 @@ def createArrayFor(caryid, lists):
     return arr
     
 def timify(val):
+    if EVENT == "333mbf":
+        stri = str(val)
+        diff = 99-int(stri[0:2])
+        missed = int(stri[7:9])
+        solved = diff+missed
+        attempted = solved+missed
+        return f"{solved} / {attempted}"
     if val < 6000:
         return f"{val/100:.2f}"
     elif val < 360000:
