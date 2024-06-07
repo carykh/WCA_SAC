@@ -13,8 +13,9 @@ START_YEAR = 2003
 END_YEAR = 2024
 LIST_N = 100
 ADD_FLAGS = True
-PATH_TO_FLAGS = "P:/YT/_Reusables/flags/"
+PATH_TO_FLAGS = "flags"
 PATH_TO_WCA_EXPORT = "data"
+SIMPLIFY_MULTIBLD_TEXT = True   # if this is true, then multiBLD results will appear as "23/30" instead of "23/30 58:47", so it's less visually cluttered.
 
 LEN = END_YEAR-START_YEAR+1
 W_W = 6000
@@ -192,10 +193,23 @@ def timify(val):
     if EVENT == "333mbf":
         stri = str(val)
         diff = 99-int(stri[0:2])
+        _time = int(stri[2:7])
         missed = int(stri[7:9])
         solved = diff+missed
         attempted = solved+missed
-        return f"{solved} / {attempted}"
+        base = f"{solved}/{attempted}"
+        if _time == 99999 or SIMPLIFY_MULTIBLD_TEXT:
+            return base
+        else:
+            second_string = f"{_time%60}".zfill(2)
+            minutes_string = str(_time//60)
+            return base+" "+minutes_string+":"+second_string
+    elif EVENT == "333fm":
+        return str(val)
+    elif EVENT == "333fm_a":
+        s = str(val)
+        return s[:-2]+"."+s[-2:]
+        
     if val < 6000:
         return f"{val/100:.2f}"
     elif val < 360000:
@@ -350,7 +364,7 @@ def getEventName():
             return parts[1]
 
 def drawTitle(cubers, draw):
-    types = "averages" if isAverage else "solves"
+    types = "averages" if isAverage else "singles"
     centerText((W_W/2,n_to_y(-3)), f"{LIST_N} best {getEventName()} WCA {types}, per year", draw, 60, (0,0,0))
                 
 def drawYears(cubers, draw):
@@ -368,7 +382,14 @@ def drawYears(cubers, draw):
         if record_high == record_low:
             centerText((x,n_to_y(LIST_N+4)), f"{timify(record_low)}", draw, 32, (0,0,0))
         elif record_high >= 1:
-            centerText((x,n_to_y(LIST_N+4)), f"{timify(record_low)} - {timify(record_high)}", draw, 32, (0,0,0))
+            centerText((x,n_to_y(LIST_N+4)), getRangeString(record_low, record_high), draw, 32, (0,0,0))
+
+def getRangeString(low, high):
+    if EVENT == "333mbf":
+        return f"{timify(high)} - {timify(low)}"
+    else:
+        return f"{timify(low)} - {timify(high)}"
+
 
 def loadLists():
     f = open(f"top100_{EVENT}.csv","r+")
