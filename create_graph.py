@@ -89,9 +89,10 @@ def create_wcaid_to_name():
         for line in infile:
             if counter >= 1:
                 parts = line.replace("\n","").split("\t")
-                wcaid = parts[4]
-                name = simplify(parts[1])
-                result[wcaid] = name
+                if parts[0] == "1":
+                    wcaid = parts[4]
+                    name = simplify(parts[1])
+                    result[wcaid] = name
             counter += 1
     return result
 
