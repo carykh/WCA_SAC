@@ -5,9 +5,8 @@ import numpy as np
 import math
 from unidecode import unidecode
 import sys
-
-EVENT = sys.argv[1] #333
-isAverage = (EVENT[-2:] == "_a")
+import subprocess
+import os
 
 START_YEAR = 2003
 END_YEAR = 2024
@@ -16,11 +15,22 @@ ADD_FLAGS = True
 PATH_TO_FLAGS = "flags"
 PATH_TO_WCA_EXPORT = "data"
 SIMPLIFY_MULTIBLD_TEXT = True   # if this is true, then multiBLD results will appear as "23/30" instead of "23/30 58:47", so it's less visually cluttered.
+ALWAYS_CALCULATE_CSV = True  # should it always call "create_top100.py" first?
+NAME_OF_PYTHON = "python"  # what do you use in the command prompt to call your latest version of Python? Put it here!
+
+EVENT_FULL = sys.argv[1]
+eventParts = EVENT_FULL.split("_")
+EVENT = eventParts[0] #333
+IS_AVERAGE = (len(eventParts) >= 2 and eventParts[1].upper() == "A")
+REGION = "" if len(eventParts) <= 2 else eventParts[2].upper()
+if EVENT == "333mbf":  # multi blind doesn't have averages
+    IS_AVERAGE = False
+
 
 LEN = END_YEAR-START_YEAR+1
 W_W = 6000
 W_H = 2400
-W_UY = 100
+W_UY = 120
 W_UH = 2140
 CURVE_SMOOTHNESS = 50
 FLAT_MARGIN = 0.16
@@ -36,11 +46,21 @@ def cary_random(stri):
     phi = 1.61803
     return ((ord(stri[0])+ord(stri[1])*phi)*phi)%1.0
 
+def caryid_to_wcaid(caryid):
+    return caryid.split("-")[1]
+
+def caryid_to_ccode(caryid):
+    return caryid[1:3]
+
 def caryid_to_color(caryid):
-    if "EMPTY" in caryid:
+    if not exists(caryid):
         return (128,128,128)
         
-    hue = cary_random(caryid[1:3])
+    IS_NATIONAL = (len(REGION) == 2) # we're looking at just one country, so it would all be the same hue otherwise
+    
+    wcaid = caryid_to_wcaid(caryid)
+    seed = wcaid[4:6] if IS_NATIONAL else caryid[1:3]
+    hue = cary_random(seed)
     hp = (hue*8)%1.0
     
     if hue < 1/8:
@@ -61,7 +81,10 @@ def caryid_to_color(caryid):
         result = [1,0,1-hp]
         
     mins = [80,120,0]
-    brightness = cary_random(caryid[8:10])
+    brightness = cary_random(wcaid[5:7])
+    if len(caryid) >= 18: # the cary IDs have random salting! Let's use to it randomly color.
+        brightness = cary_random(caryid[5:7])
+        
     for ch in range(3):
         m = 255-(255-mins[ch])*(0.5+0.5*brightness)
         result[ch] = int(m+result[ch]*(255-m))
@@ -83,7 +106,7 @@ def simplify(stri):
 
 def create_wcaid_to_name():
     result = {}
-    result["EMPTY"] = "Empty"
+    result["EMPTY"] = "EMPTY"
     counter = 0
     with open(f"{PATH_TO_WCA_EXPORT}/WCA_export_Persons.tsv", encoding="utf-8") as infile:
         for line in infile:
@@ -205,9 +228,9 @@ def timify(val):
             second_string = f"{_time%60}".zfill(2)
             minutes_string = str(_time//60)
             return base+" "+minutes_string+":"+second_string
-    elif EVENT == "333fm":
+    elif EVENT == "333fm" and not IS_AVERAGE:
         return str(val)
-    elif EVENT == "333fm_a":
+    elif EVENT == "333fm" and IS_AVERAGE:
         s = str(val)
         return s[:-2]+"."+s[-2:]
         
@@ -350,23 +373,41 @@ def drawLabels(cubers, draw):
             name_yr, name_n, name_size = namespot
             nx = yr_to_x(name_yr)
             ny = n_to_y(name_n)
+            wcaid = caryid_to_wcaid(caryid)
+            ccode = caryid_to_ccode(caryid)
             if ADD_FLAGS:
-                centerTextWithFlag((nx,ny), wcaid_to_name[caryid[4:]], draw, 5+20*name_size, (0,0,0), get_flag(caryid[1:3]))
+                centerTextWithFlag((nx,ny), wcaid_to_name[wcaid], draw, 5+20*name_size, (0,0,0), get_flag(ccode))
             else:
-                centerText((nx,ny), wcaid_to_name[caryid[4:]], draw, 5+20*name_size, (0,0,0))
+                centerText((nx,ny), wcaid_to_name[wcaid], draw, 5+20*name_size, (0,0,0))
 
-def getEventName():
-    f = open(f"{PATH_TO_WCA_EXPORT}/WCA_export_Events.tsv")
+def huntForTerm(filename, value, index_a, index_b):
+    f = open(f"{PATH_TO_WCA_EXPORT}/WCA_export_{filename}.tsv")
     lines = f.read().split("\n")
     f.close()
     for line in lines:
         parts = line.split("\t")
-        if parts[0] == EVENT.split("_")[0]:
-            return parts[1]
+        if parts[index_a].upper() == value.upper():
+            return parts[index_b]
+
+def getEventName(event):
+    return huntForTerm("Events",event,0,1)
+            
+def getCountryName(ccode):
+    return huntForTerm("Countries",ccode,2,0) 
+
+def getContinentName(region):
+    cr_name = region[:-4]+"R"   # turn "AFCONT" into "AFR"
+    return huntForTerm("Continents",cr_name,4,3) 
 
 def drawTitle(cubers, draw):
-    types = "averages" if isAverage else "singles"
-    centerText((W_W/2,n_to_y(-3)), f"{LIST_N} best {getEventName()} WCA {types}, per year", draw, 60, (0,0,0))
+    types = "averages" if IS_AVERAGE else "singles"
+    regionString = ""
+    if len(REGION) == 2:
+        regionString = f"in {getCountryName(REGION)} "
+    elif len(REGION) >= 4:
+        regionString = f"in {getContinentName(REGION)} "
+        
+    centerText((W_W/2,n_to_y(-3.8)), f"The WCA's {LIST_N} best {getEventName(EVENT)} {types} {regionString}per year", draw, 92, (0,0,0))
                 
 def drawYears(cubers, draw):
     for yr in range(LEN):
@@ -393,7 +434,11 @@ def getRangeString(low, high):
 
 
 def loadLists():
-    f = open(f"top100_{EVENT}.csv","r+")
+    list_filename = f"top100_{EVENT_FULL}.csv"
+    if ALWAYS_CALCULATE_CSV or not os.path.isfile(list_filename):
+        subprocess.call(f"{NAME_OF_PYTHON} create_top100.py {EVENT_FULL}", shell=True)
+        
+    f = open(list_filename,"r+")
     lines = f.read().split("\n")
     f.close()
     lists = [None]*LEN
@@ -434,5 +479,8 @@ draw = ImageDraw.Draw(img)
 drawShapes(cubers, draw)
 drawLabels(cubers, draw)
 drawTitle(cubers, draw)    
-drawYears(cubers, draw)    
-img.save(f"SAC_graph_{EVENT}.png")
+drawYears(cubers, draw)
+
+filename = f"SAC_graph_{EVENT_FULL}.png"
+img.save(filename)
+img.show()
