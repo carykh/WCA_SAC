@@ -19,8 +19,9 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
    ```
    python create_graph.py 333
    ```
-     This will create a simplified .csv data file, draw a 6000x2400px .png file from that data file, and open that .png.  
-* 4. Voila! The image should show up in your folder as "SAC_graph_333.png".
+     This will create a simplified .csv data file, draw a 6000x2400px .png file from that data file, and open that .png.
+  
+* 4. Voila! The image should also appear in your folder as "SAC_graph_333.png".
 
 ## Customize the event!
 
