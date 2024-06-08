@@ -40,7 +40,7 @@ If you want to make a chart for just one country (like the United States), add t
  ```
  python create_top100.py 333_A_US
  ```
-The country code must always been the third chunk of the list. So if you want to find the best 5BLD singles in China ("CN"), do this:
+The country code must always come after the event and the single/average letter. So if you want to find the best 5BLD singles in China ("CN"), do this:
 ```
  python create_top100.py 555bf_S_CN
 ```
