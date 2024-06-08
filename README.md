@@ -15,10 +15,11 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 
 ## Steps for creating images:
 * 1. Open a command prompt from this directory.
-* 2. Run this command, which will create a simplified .csv data file, draw a 6000x2400px image file from that data file, and then shows you that image!  (Takes 5-7 seconds on my computer)
+* 2. Run this command (Takes 5-7 seconds on my computer)
    ```
    python create_graph.py 333
    ```
+     This will create a simplified .csv data file, draw a 6000x2400px .png file from that data file, and then opens that .png!  
 * 4. Voila! The image should show up in your folder as "SAC_graph_333.png".
 
 ## Customize the event!
