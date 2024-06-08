@@ -1,0 +1,10 @@
+# Files you need to download/extract yourself
+/flags/
+/data/*.tsv
+
+# Files you've generated
+/top100_*.csv
+!/SAC_graph_333.png
+/SAC_graph_*.png
+
+.DS_Store
