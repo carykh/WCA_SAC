@@ -15,27 +15,53 @@ Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 
 ## Steps for creating images:
 * 1. Open a command prompt from this directory.
-* 2. Run this command, which will create a simplified .csv data file!  (Takes 5 seconds on my computer)
-   ```
-   python create_top100.py 333
-   ```
-* 3. If you ever have a .csv data file, then run this command to produce the final image:   (Takes 0.8 seconds on my computer)
+* 2. Run this command, which will create a simplified .csv data file, draw a 6000x2400px image file from that data file, and then shows you that image!  (Takes 5-7 seconds on my computer)
    ```
    python create_graph.py 333
    ```
 * 4. Voila! The image should show up in your folder as "SAC_graph_333.png".
 
-## Customize it!
+## Customize the event!
 
 You can change the event to whatever you want. In these examples, it's 333. But you can also choose from this list (taken from WCA_export_Events.tsv):
 ```
 222, 333, 333bf, 333fm, 333ft, 333mbf, 333mbo, 333oh, 444, 444bf, 555, 555bf, 666, 777, clock, magic, minx, mmagic, pyram, skewb, sq1
 ```
 
-If you want to make a chart for averages, not singles, simply append "_a" to the end of the event parameter, like so:
+If you want to make a chart for averages, not singles, simply append "_A" to the end of the event parameter, like so:
  ```
-   python create_top100.py 333_a
-   ```
+ python create_top100.py 333_A
+ ```
+## Customize the country!  (NEW as of June 7, 2024)
+
+If you want to make a chart for just one country (like the United States), add that country's code to the end ("US") like so.
+ ```
+ python create_top100.py 333_A_US
+ ```
+The country code must always been the third chunk of the list. So if you want to find the best 5BLD singles in China ("CN"), do this:
+```
+ python create_top100.py 555bf_S_CN
+```
+To find all country codes, go into the file "WCA_export_Countries.tsv".
+
+## Customize the continent!  (NEW as of June 7, 2024)
+
+If you want to make a chart for just one continent (like Africa), add that continent's code to the end ("AFCONT") like so.
+```
+ python create_top100.py 333_A_AFCONT
+```
+There are 6 continents. Here are the codes you can use for them!
+
+| Continent  | Continent code you use for this project |
+| ------------- | ------------- |
+| Africa  | AFCONT |
+| Europe  | ECONT |
+| North America  | NACONT |
+| South America  | SACONT |
+| Asia  | ASCONT |
+| Oceania  | OCCONT |
+
+Notice that these continent codes are just the names of continental records (AfR, ER, NAR), but with the "R" removed and "CONT" added. Also, these country codes or continent codes are NOT case-sensitive, so don't worry about that!
 
 ## Disclaimer
 
