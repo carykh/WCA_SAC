@@ -8,7 +8,7 @@ def dateString_to_unix(stri):
     return unix
 
 FIRST_YEAR = 2003
-LAST_YEAR = 2024
+LAST_YEAR = datetime.datetime.now().year
 LIST_N = 100
 PRINT_EVERY = 200000
 RANDOM_ORDER = True # if false, the IDs will generally be sorted with older IDs on the top, and newer IDs on the bottom. If false, it will be more random, to get a more balanced graph from top-to-bottom.

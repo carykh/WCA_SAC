@@ -7,12 +7,13 @@ from unidecode import unidecode
 import sys
 import subprocess
 import os
+import datetime
 
 START_YEAR = 2003
-END_YEAR = 2024
+END_YEAR = datetime.datetime.now().year
 LIST_N = 100
 ADD_FLAGS = True
-PATH_TO_FLAGS = "flags"
+PATH_TO_FLAGS = "P:/YT/_Reusables/flags"
 PATH_TO_WCA_EXPORT = "data"
 SIMPLIFY_MULTIBLD_TEXT = True   # if this is true, then multiBLD results will appear as "23/30" instead of "23/30 58:47", so it's less visually cluttered.
 ALWAYS_CALCULATE_CSV = True  # should it always call "create_top100.py" first?
