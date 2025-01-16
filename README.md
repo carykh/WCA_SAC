@@ -2,7 +2,7 @@
 
 Creates a Stacked Area Chart of the 100 best WCA results of an event, per year!
 
-![a stacked area chart of the top 100 3x3 solves per year](SAC_graph_333.png)
+![a stacked area chart of the top 100 3x3 solves per year](SAC_graph_333_S.png)
 
 ## Steps for setup:
 * 1. Download this repo.
